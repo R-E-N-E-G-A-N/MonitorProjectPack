@@ -1,6 +1,6 @@
 using System;
 using System.Windows.Forms;
-using MonitorModel;
+using MonitorLogic;
 
 namespace MonitorWinForms
 {

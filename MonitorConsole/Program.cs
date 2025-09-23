@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using MonitorLogic;
-using MonitorModel;
 
 class Program
 {
@@ -83,8 +82,8 @@ class Program
     static void CreateInteractive(Logic logic)
     {
         var m = ReadMonitorFromConsole(new MonitorItem());
-        var created = logic.CreateMonitor(m);
-        Console.WriteLine("Создан: " + created);
+        logic.CreateMonitor(m);
+        Console.WriteLine("Создан: " + m);
     }
 
     static MonitorItem ReadMonitorFromConsole(MonitorItem baseModel)
