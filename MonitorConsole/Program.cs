@@ -1,14 +1,29 @@
 using System;
 using System.Linq;
 using MonitorLogic;
+using DataAccessLayer;
+using Microsoft.EntityFrameworkCore;
 
 class Program
 {
     static void Main()
     {
-        var repo = new InMemoryMonitorRepository();
+        // Настройка Entity Framework
+        var options = new DbContextOptionsBuilder<MonitorDbContext>()
+            .UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=MonitorDb;Trusted_Connection=true;MultipleActiveResultSets=true")
+            .Options;
+        
+        var context = new MonitorDbContext(options);
+        context.Database.EnsureCreated(); // Создаем БД если не существует
+        
+        var repo = new EntityRepository<DataAccessLayer.MonitorItem>(context);
         var logic = new Logic(repo);
-        SeedData(logic);
+        
+        // Проверяем, есть ли уже данные в БД, если нет - добавляем тестовые
+        if (!logic.GetAllMonitors().Any())
+        {
+            SeedData(logic);
+        }
 
         while (true)
         {
@@ -47,7 +62,7 @@ class Program
 
     static void SeedData(Logic logic)
     {
-        logic.CreateMonitor(new MonitorItem
+        logic.CreateMonitor(new DataAccessLayer.MonitorItem
         {
             Manufacturer = "Dell",
             Model = "U2419H",
@@ -59,7 +74,7 @@ class Program
             Note = "Офис A"
         });
 
-        logic.CreateMonitor(new MonitorItem
+        logic.CreateMonitor(new DataAccessLayer.MonitorItem
         {
             Manufacturer = "Samsung",
             Model = "S27R750",
@@ -81,12 +96,12 @@ class Program
 
     static void CreateInteractive(Logic logic)
     {
-        var m = ReadMonitorFromConsole(new MonitorItem());
+        var m = ReadMonitorFromConsole(new DataAccessLayer.MonitorItem());
         logic.CreateMonitor(m);
         Console.WriteLine("Создан: " + m);
     }
 
-    static MonitorItem ReadMonitorFromConsole(MonitorItem baseModel)
+    static DataAccessLayer.MonitorItem ReadMonitorFromConsole(DataAccessLayer.MonitorItem baseModel)
     {
         Console.Write($"Производитель ({baseModel.Manufacturer}): ");
         var manufacturer = ReadRequiredString(baseModel.Manufacturer);
@@ -105,7 +120,7 @@ class Program
         Console.Write($"Примечание ({baseModel.Note}): ");
         var note = Console.ReadLine()?.Trim() ?? baseModel.Note;
 
-        return new MonitorItem
+        return new DataAccessLayer.MonitorItem
         {
             Id = baseModel.Id,
             Manufacturer = manufacturer,

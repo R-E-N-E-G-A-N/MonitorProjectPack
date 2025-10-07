@@ -108,7 +108,7 @@ namespace MonitorWinForms
             _statusLabel.Text = $"Всего: {monitors.Count}";
         }
 
-        private void ShowEditDialog(MonitorItem? monitor)
+        private void ShowEditDialog(DataAccessLayer.MonitorItem? monitor)
         {
             using var dlg = new MonitorDialog(monitor);
             if (dlg.ShowDialog() == DialogResult.OK)
@@ -123,14 +123,14 @@ namespace MonitorWinForms
         {
             var sel = _listView.SelectedItems.Cast<ListViewItem>().FirstOrDefault();
             if (sel == null) { MessageBox.Show("Выберите элемент."); return; }
-            if (sel.Tag is MonitorItem m) ShowEditDialog(m);
+            if (sel.Tag is DataAccessLayer.MonitorItem m) ShowEditDialog(m);
         }
 
         private void DeleteSelected()
         {
             var sel = _listView.SelectedItems.Cast<ListViewItem>().FirstOrDefault();
             if (sel == null) { MessageBox.Show("Выберите элемент."); return; }
-            if (sel.Tag is MonitorItem m)
+            if (sel.Tag is DataAccessLayer.MonitorItem m)
             {
                 var answer = MessageBox.Show($"Удалить {m.Manufacturer} {m.Model}?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (answer == DialogResult.Yes)

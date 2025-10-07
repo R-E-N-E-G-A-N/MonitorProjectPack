@@ -1,13 +1,13 @@
 using System;
 using System.Windows.Forms;
-using MonitorLogic;
+using DataAccessLayer;
 
 namespace MonitorWinForms
 {
     /// <summary>Диалог добавления/редактирования монитора.</summary>
     public class MonitorDialog : Form
     {
-        public MonitorItem Monitor { get; private set; }
+        public DataAccessLayer.MonitorItem Monitor { get; private set; }
 
         private readonly TextBox _txtManufacturer;
         private readonly TextBox _txtModel;
@@ -21,9 +21,9 @@ namespace MonitorWinForms
         private readonly Button _btnCancel;
         private readonly CheckBox _chkHasPurchaseDate;
 
-        public MonitorDialog(MonitorItem? monitor = null)
+        public MonitorDialog(DataAccessLayer.MonitorItem? monitor = null)
         {
-            Monitor = monitor != null ? Clone(monitor) : new MonitorItem();
+            Monitor = monitor != null ? Clone(monitor) : new DataAccessLayer.MonitorItem();
 
             Text = monitor == null ? "Добавить монитор" : "Редактировать монитор";
             Width = 420;
@@ -98,7 +98,7 @@ namespace MonitorWinForms
             return true;
         }
 
-        private static MonitorItem Clone(MonitorItem src) => new MonitorItem
+        private static DataAccessLayer.MonitorItem Clone(DataAccessLayer.MonitorItem src) => new DataAccessLayer.MonitorItem
         {
             Id = src.Id,
             Manufacturer = src.Manufacturer,
